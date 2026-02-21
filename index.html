@@ -3,7 +3,38 @@
 <head>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Anime Kingdom</title>
-<link rel="stylesheet" href="style.css">
+
+<style>
+body{
+background:#0b0f1a;
+color:white;
+font-family:sans-serif;
+padding:10px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+gap:10px;
+}
+
+.card{
+background:#141a2b;
+padding:8px;
+border-radius:8px;
+cursor:pointer;
+}
+
+.card img{
+width:100%;
+border-radius:6px;
+}
+
+button{
+padding:10px;
+margin-top:10px;
+}
+</style>
 </head>
 
 <body>
@@ -11,16 +42,107 @@
 <h1>Anime Kingdom</h1>
 
 <input id="search" placeholder="Search anime">
+<button id="btnSearch">Search</button>
 
-<button onclick="searchAnime()">Search</button>
+<div id="animeList" class="grid"></div>
 
-<h2>Update Terbaru</h2>
-<div id="home"></div>
+<button id="loadMore">Load More</button>
 
-<h2>Popular</h2>
-<div id="popular"></div>
+<script>
 
-<script src="app.js"></script>
+const API="https://shivraapi.my.id/anm";
+
+let page=1;
+let cache=[];
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+loadAnime();
+
+document
+.getElementById("btnSearch")
+.addEventListener("click",searchAnime);
+
+document
+.getElementById("loadMore")
+.addEventListener("click",()=>{
+page++;
+loadAnime();
+});
+
+});
+
+async function loadAnime(){
+
+try{
+
+const res=
+await fetch(API+"/list?page="+page);
+
+const json=
+await res.json();
+
+/* IMPORTANT CHECK */
+const data=
+json.data.anime_list ||
+json.data ||
+[];
+
+cache=[...cache,...data];
+
+render(cache);
+
+}catch(e){
+console.log("ERROR:",e);
+}
+
+}
+
+function render(list){
+
+const container=
+document.getElementById("animeList");
+
+container.innerHTML="";
+
+list.forEach(a=>{
+
+container.innerHTML+=`
+<div class="card"
+onclick="openDetail('${a.slug}')">
+
+<img src="${a.cover}">
+<p>${a.title}</p>
+
+</div>
+`;
+
+});
+
+}
+
+function searchAnime(){
+
+const key=
+document.getElementById("search")
+.value.toLowerCase();
+
+const filtered=
+cache.filter(a=>
+a.title.toLowerCase()
+.includes(key)
+);
+
+render(filtered);
+
+}
+
+function openDetail(slug){
+location.href=
+"detail.html?slug="+slug;
+}
+
+</script>
 
 </body>
 </html>
