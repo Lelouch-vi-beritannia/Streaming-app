@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Anime Kingdom</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>Anime Kingdom</h1>
+
+<div id="animeList" class="grid"></div>
+
+<script>
+fetch("https://shivraapi.my.id/anm/home")
+.then(res => res.json())
+.then(data => {
+
+const container = document.getElementById("animeList");
+
+data.data.forEach(anime => {
+
+container.innerHTML += `
+<div class="card"
+onclick="openDetail('${anime.slug}')">
+
+<img src="${anime.poster}">
+<h3>${anime.title}</h3>
+
+</div>
+`;
+
+});
+
+});
+
+function openDetail(slug){
+window.location.href =
+`detail.html?slug=${slug}`;
+}
+</script>
+
+</body>
+</html>
