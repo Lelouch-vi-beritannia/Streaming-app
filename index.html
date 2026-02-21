@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Anime Kingdom</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -10,46 +10,17 @@
 
 <h1>Anime Kingdom</h1>
 
-<div id="animeList" class="grid"></div>
+<input id="search" placeholder="Search anime">
 
-<script>
+<button onclick="searchAnime()">Search</button>
 
-fetch("https://shivraapi.my.id/anm/home")
-.then(res => res.json())
-.then(result => {
+<h2>Update Terbaru</h2>
+<div id="home"></div>
 
-const animeData =
-result.data.update_terbaru;
+<h2>Popular</h2>
+<div id="popular"></div>
 
-const container =
-document.getElementById("animeList");
-
-animeData.forEach(anime => {
-
-container.innerHTML += `
-<div class="card"
-onclick="openDetail('${anime.slug}')">
-
-<img src="${anime.cover}">
-<h3>${anime.title}</h3>
-<p>Episode ${anime.episode}</p>
-
-</div>
-`;
-
-});
-
-})
-.catch(err=>{
-console.log("API ERROR:",err);
-});
-
-function openDetail(slug){
-window.location.href =
-`detail.html?slug=${slug}`;
-}
-
-</script>
+<script src="app.js"></script>
 
 </body>
 </html>
