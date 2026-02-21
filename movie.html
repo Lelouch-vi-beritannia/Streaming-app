@@ -1,0 +1,20 @@
+<script>
+
+fetch("https://shivraapi.my.id/anm/movie")
+.then(r=>r.json())
+.then(j=>{
+
+j.data.forEach(m=>{
+
+document.body.innerHTML+=`
+<div>
+<img src="${m.cover}">
+<p>${m.title}</p>
+</div>
+`;
+
+});
+
+});
+
+</script>
