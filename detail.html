@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Detail Anime</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="detail"></div>
+<h2>Episode</h2>
+<div id="episodeList"></div>
+
+<script>
+
+const params =
+new URLSearchParams(window.location.search);
+
+const slug = params.get("slug");
+
+fetch(
+`https://shivraapi.my.id/anm/detail/${slug}`
+)
+.then(res=>res.json())
+.then(data=>{
+
+const anime = data.data;
+
+document.getElementById("detail").innerHTML=`
+<h1>${anime.title}</h1>
+<img src="${anime.poster}" width="200">
+<p>${anime.synopsis}</p>
+`;
+
+});
+
+fetch(
+`https://shivraapi.my.id/anm/episode/${slug}`
+)
+.then(res=>res.json())
+.then(data=>{
+
+const epContainer =
+document.getElementById("episodeList");
+
+data.data.forEach(ep=>{
+
+epContainer.innerHTML+=`
+<div class="episode"
+onclick="playEpisode('${ep.slug}')">
+${ep.title}
+</div>
+`;
+
+});
+
+});
+
+function playEpisode(slug){
+window.location.href =
+`player.html?slug=${slug}`;
+}
+
+</script>
+
+</body>
+</html>
