@@ -1,73 +1,66 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="style.css">
+<meta name="viewport" content="width=device-width">
 <title>Detail</title>
 </head>
 
 <body>
 
-<div id="detail"></div>
-
+<div id="info"></div>
 <h2>Episode</h2>
-<div id="episode"></div>
+<div id="episodes"></div>
 
 <script>
 
 const API="https://shivraapi.my.id/anm";
 
-const params=
-new URLSearchParams(location.search);
-
-const slug=params.get("slug");
+const slug=
+new URLSearchParams(location.search)
+.get("slug");
 
 async function load(){
 
-/* DETAIL */
+try{
 
 const d=
 await fetch(API+"/detail/"+slug);
+const detail=await d.json();
 
-const detail=
-await d.json();
-
-const anime=
-detail.data;
-
-document.getElementById("detail")
+document.getElementById("info")
 .innerHTML=`
-
-<img src="${anime.cover}">
-<h2>${anime.title}</h2>
-<p>${anime.synopsis}</p>
-
+<h2>${detail.data.title}</h2>
+<p>${detail.data.synopsis}</p>
 `;
-
-/* EPISODE */
 
 const e=
 await fetch(API+"/episode/"+slug);
-
-const ep=
-await e.json();
+const ep=await e.json();
 
 const list=
-ep.data.episode;
+ep.data.episode_list ||
+ep.data ||
+[];
 
 list.forEach(x=>{
 
-document.getElementById("episode")
+document.getElementById("episodes")
 .innerHTML+=`
-
-<div class="card">
+<div onclick="play('${x.slug}')">
 ${x.title}
 </div>
-
 `;
 
 });
 
+}catch(err){
+console.log(err);
+}
+
+}
+
+function play(slug){
+location.href="player.html?slug="+slug;
 }
 
 load();
