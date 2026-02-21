@@ -1,0 +1,21 @@
+<script>
+
+fetch("https://shivraapi.my.id/anm/genres")
+.then(r=>r.json())
+.then(j=>{
+
+j.data.forEach(g=>{
+
+document.body.innerHTML+=`
+<div onclick="
+location.href='genre.html?slug=${g.slug}'
+">
+${g.name}
+</div>
+`;
+
+});
+
+});
+
+</script>
